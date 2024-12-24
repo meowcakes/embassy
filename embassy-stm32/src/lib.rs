@@ -535,8 +535,6 @@ fn init_hw(config: Config) -> Peripherals {
             exti::init(cs);
 
             rcc::init(config.rcc);
-            
-            loop {}
 
             // must be after rcc init
             #[cfg(feature = "_time-driver")]
