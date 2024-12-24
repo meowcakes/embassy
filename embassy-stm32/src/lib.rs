@@ -471,6 +471,8 @@ fn init_hw(config: Config) -> Peripherals {
         #[cfg(not(any(stm32f2, stm32f4, stm32f7, stm32l0, stm32h5, stm32h7, stm32h7rs)))]
         rcc::enable_and_reset_with_cs::<peripherals::FLASH>(cs);
 
+        loop {}
+
         // Enable the VDDIO2 power supply on chips that have it.
         // Note that this requires the PWR peripheral to be enabled first.
         #[cfg(any(stm32l4, stm32l5))]
