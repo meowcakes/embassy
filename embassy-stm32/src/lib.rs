@@ -464,9 +464,8 @@ fn init_hw(config: Config) -> Peripherals {
             }
         });
 
-        loop {}
-        #[cfg(not(any(stm32f1, stm32wb, stm32wl)))]
-        rcc::enable_and_reset_with_cs::<peripherals::SYSCFG>(cs);
+        // #[cfg(not(any(stm32f1, stm32wb, stm32wl)))]
+        // rcc::enable_and_reset_with_cs::<peripherals::SYSCFG>(cs);
         #[cfg(not(any(stm32h5, stm32h7, stm32h7rs, stm32wb, stm32wl)))]
         rcc::enable_and_reset_with_cs::<peripherals::PWR>(cs);
         #[cfg(not(any(stm32f2, stm32f4, stm32f7, stm32l0, stm32h5, stm32h7, stm32h7rs)))]
