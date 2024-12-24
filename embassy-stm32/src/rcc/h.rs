@@ -414,11 +414,10 @@ pub(crate) unsafe fn init(config: Config) {
         }),
     }
     while !RCC.cr().read().hsirdy() {}
-    
-    loop {}
 
     // Use the HSI clock as system clock during the actual clock setup
     RCC.cfgr().modify(|w| w.set_sw(Sysclk::HSI));
+    loop {}
     while RCC.cfgr().read().sws() != Sysclk::HSI {}
 
     // Configure HSI
