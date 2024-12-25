@@ -875,8 +875,8 @@ foreach_pin!(
 );
 
 pub(crate) unsafe fn init(_cs: CriticalSection) {
-    #[cfg(afio)]
-    crate::rcc::enable_and_reset_with_cs::<crate::peripherals::AFIO>(_cs);
+    // #[cfg(afio)]
+    // crate::rcc::enable_and_reset_with_cs::<crate::peripherals::AFIO>(_cs);
 
     crate::_generated::init_gpio();
 }
