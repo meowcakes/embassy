@@ -665,7 +665,7 @@ impl<'a, W: Word> ReadableRingBuffer<'a, W> {
     }
 
     /// Get the available readable dma samples.
-    pub fn len(&mut self, dma: &mut impl DmaCtrl) -> Result<usize, Error> {
+    pub fn len(&mut self, dma: &mut impl DmaCtrl) -> Result<usize, ringbuffer::Error> {
         self.ringbuf.len(dma)
     }
 
