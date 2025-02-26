@@ -665,8 +665,11 @@ impl<'a, W: Word> ReadableRingBuffer<'a, W> {
     }
 
     /// Get the available readable dma samples.
-    pub fn len(&mut self, dma: &mut impl DmaCtrl) -> Result<usize, ringbuffer::Error> {
-        self.ringbuf.len(dma)
+    pub fn len(&mut self) -> Result<usize, ringbuffer::Error> {
+        self.ringbuf.len(&mut DmaCtrlImpl {
+            channel: self.channel.reborrow(),
+            word_size: W::size(),
+        })
     }
 
     /// Set the waker for the DMA controller.
