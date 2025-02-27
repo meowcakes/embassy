@@ -574,16 +574,21 @@ async fn flush(info: &Info, state: &State) -> Result<(), Error> {
 
         compiler_fence(Ordering::SeqCst);
 
+        info!("flush 1");
         // future which completes when Transmission complete is detected
         let abort = poll_fn(move |cx| {
+            info!("flush 2");
             state.rx_waker.register(cx.waker());
+            info!("flush 3");
 
             let sr = sr(r).read();
             if sr.tc() {
+                info!("flush 4");
                 // Transmission complete detected
                 return Poll::Ready(());
             }
 
+            info!("flush 5");
             Poll::Pending
         });
 
