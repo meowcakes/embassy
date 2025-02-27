@@ -16,6 +16,7 @@ use crate::gpio::{AnyPin, SealedPin as _};
 use crate::mode::Async;
 use crate::time::Hertz;
 use crate::usart::{Regs, Sr};
+use crate::pac::usart::regs;
 
 /// Rx-only Ring-buffered UART Driver
 ///
@@ -254,8 +255,10 @@ fn clear_idle_flag(r: Regs) -> Sr {
 
     // This read also clears the error and idle interrupt flags on v1.
     unsafe { rdr(r).read_volatile() };
-    info!("clear_interrupt_flags 5");
-    clear_interrupt_flags(r, sr);
+    let mut clear_idle = regs::Icr(0);
+    clear_idle.set_idle(true);
+    r.icr().write_value(clear_idle);
+    //clear_interrupt_flags(r, sr);
 
     r.cr1().modify(|w| w.set_idleie(true));
 
