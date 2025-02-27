@@ -592,7 +592,9 @@ async fn flush(info: &Info, state: &State) -> Result<(), Error> {
             Poll::Pending
         });
 
+        info!("flush 6");
         abort.await;
+        info!("flush 7");
     }
 
     Ok(())
