@@ -259,7 +259,7 @@ fn clear_idle_flag(r: Regs) -> Sr {
     // clear_idle.set_idle(true);
     let mut clear_flags = regs::Icr(sr.0);
     clear_flags.set_tc(false);
-    r.icr().write_value(clear_idle);
+    r.icr().write_value(clear_flags);
     //clear_interrupt_flags(r, sr);
 
     r.cr1().modify(|w| w.set_idleie(true));
