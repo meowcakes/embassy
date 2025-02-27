@@ -581,6 +581,7 @@ async fn flush(info: &Info, state: &State) -> Result<(), Error> {
             state.rx_waker.register(cx.waker());
             info!("flush 3");
 
+            info!("r.as_ptr(): {:#X}", r.as_ptr() as u32);
             let sr = sr(r).read();
             if sr.tc() {
                 info!("flush 4");
