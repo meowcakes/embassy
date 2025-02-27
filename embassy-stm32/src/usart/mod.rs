@@ -731,6 +731,7 @@ impl<'d> UartRx<'d, Async> {
             let sr = sr(r).read();
             // This read also clears the error and idle interrupt flags on v1.
             unsafe { rdr(r).read_volatile() };
+            info!("clear_interrupt_flags 1");
             clear_interrupt_flags(r, sr);
         }
 
@@ -765,6 +766,7 @@ impl<'d> UartRx<'d, Async> {
             let sr = sr(r).read();
             // This read also clears the error and idle interrupt flags on v1.
             unsafe { rdr(r).read_volatile() };
+            info!("clear_interrupt_flags 2");
             clear_interrupt_flags(r, sr);
 
             if sr.pe() {
@@ -788,6 +790,7 @@ impl<'d> UartRx<'d, Async> {
             let sr = sr(r).read();
             // This read also clears the error and idle interrupt flags on v1.
             unsafe { rdr(r).read_volatile() };
+            info!("clear_interrupt_flags 3");
             clear_interrupt_flags(r, sr);
 
             // enable idle interrupt
@@ -807,6 +810,7 @@ impl<'d> UartRx<'d, Async> {
 
             // This read also clears the error and idle interrupt flags on v1.
             unsafe { rdr(r).read_volatile() };
+            info!("clear_interrupt_flags 4");
             clear_interrupt_flags(r, sr);
 
             if enable_idle_line_detection {
@@ -1988,7 +1992,6 @@ fn sr(r: Regs) -> crate::pac::common::Reg<regs::Isr, crate::pac::common::R> {
 #[cfg(any(usart_v3, usart_v4))]
 #[allow(unused)]
 fn clear_interrupt_flags(r: Regs, sr: regs::Isr) {
-    info!("clear_interrupt_flags");
     r.icr().write(|w| *w = regs::Icr(sr.0));
 }
 
