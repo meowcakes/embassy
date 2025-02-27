@@ -574,28 +574,20 @@ async fn flush(info: &Info, state: &State) -> Result<(), Error> {
 
         compiler_fence(Ordering::SeqCst);
 
-        info!("flush 1");
         // future which completes when Transmission complete is detected
         let abort = poll_fn(move |cx| {
-            info!("flush 2");
             state.rx_waker.register(cx.waker());
-            info!("flush 3");
 
-            info!("r.as_ptr(): {:#X}", r.as_ptr() as u32);
             let sr = sr(r).read();
             if sr.tc() {
-                info!("flush 4");
                 // Transmission complete detected
                 return Poll::Ready(());
             }
 
-            info!("flush 5");
             Poll::Pending
         });
 
-        info!("flush 6");
         abort.await;
-        info!("flush 7");
     }
 
     Ok(())
@@ -1996,6 +1988,7 @@ fn sr(r: Regs) -> crate::pac::common::Reg<regs::Isr, crate::pac::common::R> {
 #[cfg(any(usart_v3, usart_v4))]
 #[allow(unused)]
 fn clear_interrupt_flags(r: Regs, sr: regs::Isr) {
+    info!("clear_interrupt_flags");
     r.icr().write(|w| *w = regs::Icr(sr.0));
 }
 
