@@ -86,6 +86,7 @@ unsafe fn on_interrupt(r: Regs, s: &'static State) {
     compiler_fence(Ordering::SeqCst);
     info!("interrupt");
     s.rx_waker.wake();
+    s.tx_waker.wake();
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -577,7 +578,7 @@ async fn flush(info: &Info, state: &State) -> Result<(), Error> {
 
         // future which completes when Transmission complete is detected
         let abort = poll_fn(move |cx| {
-            state.rx_waker.register(cx.waker());
+            state.tx_waker.register(cx.waker());
 
             let sr = sr(r).read();
             if sr.tc() {
@@ -2002,6 +2003,7 @@ enum Kind {
 
 struct State {
     rx_waker: AtomicWaker,
+    tx_waker: AtomicWaker,
     tx_rx_refcount: AtomicU8,
 }
 
@@ -2009,6 +2011,7 @@ impl State {
     const fn new() -> Self {
         Self {
             rx_waker: AtomicWaker::new(),
+            tx_waker: AtomicWaker::new(),
             tx_rx_refcount: AtomicU8::new(0),
         }
     }
