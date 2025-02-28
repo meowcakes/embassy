@@ -162,6 +162,7 @@ impl<'d> RingBufferedUartRx<'d> {
                 }
             }
 
+            info!("start wait_for_data_or_idle");
             match self.wait_for_data_or_idle().await {
                 Ok(_) => {}
                 Err(err) => {
@@ -169,6 +170,7 @@ impl<'d> RingBufferedUartRx<'d> {
                     return Err(err);
                 }
             }
+            info!("end wait_for_data_or_idle");
         }
     }
 
@@ -178,17 +180,14 @@ impl<'d> RingBufferedUartRx<'d> {
 
         // Future which completes when idle line is detected
         let s = self.state;
-        info!("ckpt 1");
         let uart = poll_fn(|cx| {
             s.rx_waker.register(cx.waker());
-            info!("ckpt 2");
 
             compiler_fence(Ordering::SeqCst);
 
             // Critical section is needed so that IDLE isn't set after
             // our read but before we clear it.
             let sr = critical_section::with(|_| clear_idle_flag(self.info.regs));
-            info!("ckpt 3");
 
             check_for_errors(sr)?;
 
@@ -199,13 +198,11 @@ impl<'d> RingBufferedUartRx<'d> {
                 Poll::Pending
             }
         });
-        info!("ckpt 4");
 
         let mut dma_init = false;
         // Future which completes when there is dma is half full or full
         let dma = poll_fn(|cx| {
             self.ring_buf.set_waker(cx.waker());
-            info!("ckpt 5");
 
             let status = match dma_init {
                 false => Poll::Pending,
@@ -215,7 +212,6 @@ impl<'d> RingBufferedUartRx<'d> {
             dma_init = true;
             status
         });
-        info!("ckpt 6");
 
         match select(uart, dma).await {
             Either::Left((result, _)) => result,
