@@ -84,6 +84,7 @@ unsafe fn on_interrupt(r: Regs, s: &'static State) {
     }
 
     compiler_fence(Ordering::SeqCst);
+    info!("interrupt");
     s.rx_waker.wake();
 }
 

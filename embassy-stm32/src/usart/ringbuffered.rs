@@ -162,7 +162,6 @@ impl<'d> RingBufferedUartRx<'d> {
                 }
             }
 
-            info!("start wait_for_data_or_idle");
             match self.wait_for_data_or_idle().await {
                 Ok(_) => {}
                 Err(err) => {
@@ -170,7 +169,6 @@ impl<'d> RingBufferedUartRx<'d> {
                     return Err(err);
                 }
             }
-            info!("end wait_for_data_or_idle");
         }
     }
 
