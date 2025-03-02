@@ -179,7 +179,6 @@ impl<'d> RingBufferedUartRx<'d> {
         // Future which completes when idle line is detected
         let s = self.state;
         let uart = poll_fn(|cx| {
-            info!("wait_for_data_or_idle uart poll_fn");
             s.rx_waker.register(cx.waker());
 
             compiler_fence(Ordering::SeqCst);
@@ -212,7 +211,6 @@ impl<'d> RingBufferedUartRx<'d> {
             status
         });
 
-        info!("wait_for_data_or_idle select");
         match select(uart, dma).await {
             Either::Left((result, _)) => result,
             Either::Right(((), _)) => Ok(()),
